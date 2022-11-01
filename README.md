@@ -14,7 +14,7 @@ Each Project will have hierarchy like:
 
 **Packages used:** Matplotlib for data visualization
 
-** Skills demonstrated:** `Data-Cleaning` `Exploratory Data Analysis` `Data Visulization` `Presentation`
+** Skills demonstrated:** `Data-Cleaning` `Data Visulization` `Presentation`
 
 **Summary:**
   
@@ -22,5 +22,15 @@ This project was part my Google Data analytics Certification. At the time of cou
 other related libraries, I again did new analysis. My goal was to figure out how Casual and Member riders used Cyclistic Platform differently. By observing Daily, Weekly 
 and Monthly trends I clearly logged my observations. Based on these observations I provided my suggestions for marketing strategy in 'Cyclistic Bike Share Analysis.pptx'
   
+=================================================================================================================================================
 
+## 1. Video Game Sales Analysis
   
+**Tools used:** MS-Excel
+
+** Skills demonstrated:** `Pivot-tables` `Exploratory Data Analysis` `Data Visulization` `Dashboarding`
+
+**Summary:**
+  
+The aim of this project was to learn in depth about Excel tools that will be used extensively for EDA. This helps to get sense of trends in data for further 
+in-depth analysis. I will do one more such EDA project but with help of formulas and functions. It is still very tricky part for me.

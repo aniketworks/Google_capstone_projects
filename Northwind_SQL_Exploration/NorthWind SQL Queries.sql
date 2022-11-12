@@ -82,8 +82,7 @@ WHERE
 --Note the importance of using single quotes in the query
 
 
-/* 8. Create a list of product names that have the second letter of the name = ‘h’ (8
-records) */
+/* 8. Create a list of product names that have the second letter of the name = ‘h’ */
 
 SELECT
 	ProductName
@@ -97,7 +96,7 @@ WHERE
 
 
 /* 9. Create a list of product names that have the second letter of the name = ‘a’ and the
-last letter = ‘e’ (2 records) */
+last letter = ‘e’ */
 
 SELECT
 	ProductName
@@ -109,7 +108,7 @@ WHERE
 
 
 /* 10. List all the customers that have one of the following fields NULL (Region or Fax).
-Also the title of the contact should be ‘Owner’ Sort the list by contact name (14 records) */
+Also the title of the contact should be ‘Owner’ Sort the list by contact name*/
 
 SELECT
 	*
@@ -228,7 +227,7 @@ WHERE
 ;
 
 
-/* 17. How many orders has Northwind taken? (Answer 830) */
+/* 17. How many orders has Northwind taken? */
 
 SELECT
 	COUNT(DISTINCT(OrderID)) AS numberOfOrdersTaken
@@ -277,7 +276,7 @@ ORDER BY
 	MONTH(OrderDate)
 ;
 
-/* 20. Using question 19, list only the months where Northwind have less than 25 orders. (3 records) */
+/* 20. Using question 19, list only the months where Northwind have less than 25 orders.*/
 
 SELECT
 	YEAR(OrderDate) as yearsOfOrder,
@@ -346,24 +345,155 @@ FROM
 ;
 
 
+/* 24. How old is each employee? List the oldest at the top of the list.*/
 
-
-
--- View table codes
 SELECT
-	*
+	CONCAT(FirstName, ' ', LastName) AS [Name of Employee],
+	DATEDIFF(year, BirthDate, GETDATE()) AS Age
 FROM
-	[Order Details]
+	Employees
+ORDER BY
+	Age DESC
 ;
 
+
+/* 25. Create a list of suppliers (companyname, contactname) and the products (product name) they supply.
+Sort the list by supplier, then product */
+
+SELECT
+	s.CompanyName, s.ContactName,
+	p.ProductName
+FROM
+	Suppliers as s
+LEFT JOIN
+	Products as p
+ON
+	s.SupplierID = p.SupplierID
+;
+
+
+/*26. Create a list of customers (companyname) and some information about each order
+(orderid, orderdate, shipdate) they have placed.*/
+
+SELECT
+	c.CompanyName,
+	o.OrderID, o.OrderDate, o.ShippedDate
+FROM
+	Orders AS o
+LEFT JOIN
+	Customers AS c
+ON
+	c.CustomerID = o.CustomerID
+;
+
+
+/* 27. Create list of products that were shipped to customers on Jun 1997. */
+
+-- Selecting orders that are shipped to customers in June'1997
 SELECT
 	*
 FROM
 	Orders
+WHERE
+	YEAR(ShippedDate) = 1997 AND
+	MONTH(ShippedDate) = 6
 ;
 
+--Joining Orders and Order Details table to fetch product ID
 SELECT
-	DISTINCT CustomerID
+	o.ShippedDate,
+	od.ProductID
 FROM
-	Customers
+	(SELECT
+		*
+	FROM
+		Orders
+	WHERE
+		YEAR(ShippedDate) = 1997 AND
+		MONTH(ShippedDate) = 6
+	) AS o
+JOIN
+	[Order Details] AS od
+ON
+	o.OrderID = od.OrderID
+;
+
+--Searching fetched ProductID from Products Table
+SELECT
+	p.ProductName,
+	o_merged.ShippedDate
+FROM
+	(SELECT
+		o.ShippedDate,
+		od.ProductID
+	FROM
+		(SELECT
+			*
+		 FROM
+			Orders
+		 WHERE
+			YEAR(ShippedDate) = 1997 AND
+			MONTH(ShippedDate) = 6
+		) AS o
+	JOIN
+		[Order Details] AS od
+	ON
+		o.OrderID = od.OrderID) AS o_merged
+JOIN
+	Products AS p
+ON
+	o_merged.ProductID = p.ProductID
+;
+
+
+/* 28. Create a list of customers that have ordered Tofu. Make sure to list each customer only once.*/
+
+SELECT
+	DISTINCT(c.ContactName), 
+	p.ProductName,
+	od.OrderID
+FROM
+	Products AS p
+JOIN
+	[Order Details] as od
+ON
+	od.ProductID = p.ProductID
+JOIN
+	Orders AS o
+ON
+	od.OrderID = o.OrderID
+JOIN
+	Customers AS c
+ON
+	o.CustomerID = c.CustomerID
+WHERE
+	p.ProductName = 'Tofu'
+;
+
+
+/* 29. Create a list of customers that have placed and order in 1996 and 1998. Sort the list
+by customer contact. */
+
+SELECT
+	DISTINCT(joinedTable.ContactName)
+FROM
+	(SELECT
+		c.CompanyName, c.ContactName,
+		o.OrderDate
+	FROM
+		Orders AS o
+	JOIN
+		[Order Details] AS od
+	ON
+		o.OrderID = od.OrderID
+	JOIN
+		Customers AS c
+	ON
+		o.CustomerID = c.CustomerID
+	WHERE
+		YEAR(o.OrderDate) = '1998' OR
+		YEAR(o.OrderDate) = '1996'
+	) AS joinedTable
+ORDER BY
+	joinedTable.ContactName
 ;
